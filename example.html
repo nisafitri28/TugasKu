@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#4F46E5" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192x192-A.png" type="image/png" />
+  <title>TugasKu - Halaman Contoh</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <header class="header simple-header">
+    <h1>TugasKu</h1>
+    <p>Tugas Aman, Masa Depan Nyaman</p>
+  </header>
+
+  <main class="main">
+    <section class="card">
+      <h2>Halaman contoh PWA</h2>
+      <p>Template awal sudah disesuaikan menjadi branding TugasKu. Gunakan halaman utama untuk fitur manajemen tugas mahasiswa, deadline, reminder, progres, dan statistik.</p>
+      <button onclick="location.href='index.html'">Buka Dashboard TugasKu</button>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 TugasKu</p>
+  </footer>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(() => console.log('SW registered!'))
+        .catch(err => console.error('SW gagal:', err));
+    }
+  </script>
+</body>
+</html>
