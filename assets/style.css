@@ -157,3 +157,59 @@ button {
     border-radius: 1.35rem;
   }
 }
+
+
+/* Mobile comfort layer for example/offline pages */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+button {
+  touch-action: manipulation;
+}
+
+.card p,
+.header p,
+.card h1,
+.card h2 {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 1.45rem 1rem 1.15rem;
+  }
+
+  .main {
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1.2rem;
+    border-radius: 1.25rem;
+  }
+
+  button {
+    width: 100%;
+    min-height: 48px;
+  }
+}
+
+@media (max-width: 420px) {
+  .main {
+    padding: 0.75rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.4rem;
+  }
+}
