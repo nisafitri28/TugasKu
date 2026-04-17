@@ -11,9 +11,9 @@
   <link rel="icon" href="icons/icon-192x192-A.png" type="image/png" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/app.css" />
-  <title>TugasKu — Dashboard tugas yang lebih modern</title>
+  <title>TugasKu — Atur reminder, notifikasi, dan instalasi</title>
 </head>
-<body data-page="dashboard">
+<body data-page="settings">
   <div class="page-shell">
     <aside class="sidebar" id="sidebar">
       <div class="brand-card">
@@ -55,9 +55,9 @@
           <div class="topbar-left">
             <button class="menu-btn" id="menuBtn" aria-label="Buka menu">☰</button>
             <div>
-              <div class="page-kicker">Beranda</div>
-              <h1 class="page-title">Dashboard tugas yang lebih modern</h1>
-              <p class="page-subtitle">Ringkas, profesional, dan nyaman dipakai di desktop maupun HP.</p>
+              <div class="page-kicker">Pengaturan</div>
+              <h1 class="page-title">Atur reminder, notifikasi, dan instalasi</h1>
+              <p class="page-subtitle">Semua pengaturan penting kini dipusatkan dalam halaman sendiri.</p>
             </div>
           </div>
           <div class="topbar-actions">
@@ -69,65 +69,52 @@
       </div>
       <div class="content">
         
-<section class="hero-grid">
-  <div class="hero-card">
-    <span class="eyebrow">✨ Dashboard lebih rapi & fokus</span>
-    <h2>Kelola tugas kuliah dengan tampilan yang lebih profesional.</h2>
-    <p>Halaman beranda kini fokus pada ringkasan penting, tugas prioritas, dan aksi cepat. Setiap fitur inti sudah dipisahkan ke halaman masing-masing agar navigasinya lebih nyaman, terutama di layar HP.</p>
-    <div class="hero-actions">
-      <a class="btn" href="tambah.html">Tambah tugas baru</a>
-      <a class="btn-secondary" href="tugas.html">Lihat semua tugas</a>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-mini"><strong id="heroDueText">0 deadline dalam 7 hari</strong><span>Deadline yang perlu diperhatikan</span></div>
-      <div class="hero-mini"><strong id="heroLoadText">0 jam estimasi minggu ini</strong><span>Perkiraan beban kerja</span></div>
-      <div class="hero-mini"><strong id="heroDoneText">0 tugas selesai minggu ini</strong><span>Produktivitas terkini</span></div>
-      <div class="hero-mini"><strong>PWA siap install</strong><span>Tetap ringan dan terasa seperti aplikasi</span></div>
-    </div>
-  </div>
-  <div class="panel">
-    <div class="panel-head">
-      <div>
-        <h3>Prioritas utama sekarang</h3>
-        <p>Tugas paling mendesak berdasarkan deadline, bobot nilai, estimasi, dan status pengerjaan.</p>
-      </div>
-    </div>
-    <div id="urgentTaskBox"></div>
-  </div>
-</section>
-
-<section class="grid-5">
-  <article class="stat-card"><div class="stat-label">Tugas aktif</div><div class="stat-value" id="statActive">0</div><div class="stat-note">Belum selesai & belum diarsipkan</div></article>
-  <article class="stat-card"><div class="stat-label">Prioritas tinggi</div><div class="stat-value" id="statHigh">0</div><div class="stat-note">Perlu perhatian cepat</div></article>
-  <article class="stat-card"><div class="stat-label">Mata kuliah aktif</div><div class="stat-value" id="statSubject">0</div><div class="stat-note">Terbentuk otomatis dari tugas</div></article>
-  <article class="stat-card"><div class="stat-label">Arsip tugas</div><div class="stat-value" id="statArchive">0</div><div class="stat-note">Riwayat tugas selesai</div></article>
-  <article class="stat-card"><div class="stat-label">Progress semester</div><div class="stat-value" id="statProgress">0%</div><div class="stat-note">Persentase tugas yang selesai</div></article>
-</section>
-
-<section class="panel">
-  <div class="panel-head">
-    <div>
-      <h3>Aksi cepat</h3>
-      <p>Navigasi kini dipisah per halaman agar tidak lagi menumpuk panjang di satu layar.</p>
-    </div>
-  </div>
-  <div class="quick-actions">
-    <a class="quick-card" href="tambah.html"><div class="icon-box">➕</div><strong>Tambah tugas</strong><p>Isi form tugas lengkap dalam halaman terpisah yang lebih fokus.</p></a>
-    <a class="quick-card" href="tugas.html"><div class="icon-box">📝</div><strong>Kelola tugas</strong><p>Lihat, cari, edit, arsipkan, dan ubah status dari satu tempat.</p></a>
-    <a class="quick-card" href="kalender.html"><div class="icon-box">📅</div><strong>Kalender deadline</strong><p>Pantau deadline 7 hari ke depan dalam tampilan yang lebih nyaman.</p></a>
-    <a class="quick-card" href="statistik.html"><div class="icon-box">📊</div><strong>Statistik</strong><p>Lihat progres, keterlambatan, beban, dan sebaran prioritas tugas.</p></a>
-  </div>
-</section>
-
 <section class="grid-2">
-  <div class="panel">
-    <div class="panel-head"><div><h3>Deadline terdekat</h3><p>Empat tugas paling dekat dalam 7 hari.</p></div></div>
-    <div class="list" id="dueSoonList"></div>
-  </div>
-  <div class="panel">
-    <div class="panel-head"><div><h3>Aktivitas terbaru</h3><p>Tugas terakhir yang dibuat atau diperbarui.</p></div></div>
-    <div class="list" id="recentTaskList"></div>
-  </div>
+  <article class="settings-card">
+    <h3>Tampilan & tema</h3>
+    <p>Pilih mode tampilan yang paling nyaman untuk mata, terutama saat digunakan malam hari.</p>
+    <div class="theme-picker" style="margin-top:14px;">
+      <label class="theme-pill"><input type="radio" name="themeMode" value="light" /> <span>☀️ Terang</span></label>
+      <label class="theme-pill"><input type="radio" name="themeMode" value="dark" /> <span>🌙 Gelap</span></label>
+      <label class="theme-pill"><input type="radio" name="themeMode" value="auto" /> <span>🌓 Otomatis</span></label>
+    </div>
+    <div class="form-actions" style="margin-top:16px;">
+      <button class="btn-secondary" type="button" onclick="toggleTheme()">Ganti cepat tema</button>
+    </div>
+  </article>
+  <article class="settings-card">
+    <h3>Reminder default</h3>
+    <p>Pilih pengingat bawaan yang akan otomatis digunakan saat membuat tugas baru.</p>
+    <div class="setting-pills" style="margin-top:14px;">
+      <label class="check-pill"><input type="checkbox" id="default7" /> H-7</label>
+      <label class="check-pill"><input type="checkbox" id="default3" /> H-3</label>
+      <label class="check-pill"><input type="checkbox" id="default1" /> H-1</label>
+      <label class="check-pill"><input type="checkbox" id="default2h" /> 2 jam sebelum</label>
+    </div>
+    <div class="form-actions" style="margin-top:16px;">
+      <button class="btn" type="button" onclick="saveSettings()">Simpan pengaturan</button>
+      <a class="btn-secondary" href="tambah.html">Buat tugas baru</a>
+    </div>
+  </article>
+  <article class="settings-card">
+    <h3>Notifikasi & instalasi</h3>
+    <p id="notificationStatusText">Belum diperiksa.</p>
+    <div class="form-actions" style="margin-top:16px;">
+      <button class="btn-secondary" type="button" onclick="requestNotificationPermission()">Aktifkan notifikasi</button>
+      <button class="btn" id="installBtnAlt" type="button" style="display:none;">Install aplikasi</button>
+    </div>
+    <div class="note-box" style="margin-top:16px;">Aplikasi tetap bekerja ringan sebagai PWA dan sekarang navigasinya lebih natural karena setiap fitur utama punya halaman sendiri.</div>
+  </article>
+</section>
+<section class="settings-stack">
+  <article class="settings-card">
+    <h3>Catatan peningkatan UI</h3>
+    <p>Versi ini dibuat lebih premium dengan dukungan mode gelap, transisi halus, kartu statistik yang lebih informatif, serta bottom navigation untuk mobile agar navigasi terasa lebih natural.</p>
+  </article>
+  <article class="settings-card">
+    <h3>Tips penggunaan</h3>
+    <p>Gunakan mode gelap saat malam hari, aktifkan notifikasi agar deadline tidak terlewat, dan install aplikasi ke layar utama HP agar terasa seperti aplikasi native.</p>
+  </article>
 </section>
 
         <div class="footer-note">TugasKu PWA • Desain responsif • Nyaman dipakai di desktop dan HP</div>

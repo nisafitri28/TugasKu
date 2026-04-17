@@ -11,9 +11,9 @@
   <link rel="icon" href="icons/icon-192x192-A.png" type="image/png" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/app.css" />
-  <title>TugasKu — Dashboard tugas yang lebih modern</title>
+  <title>TugasKu — Ringkasan per mata kuliah</title>
 </head>
-<body data-page="dashboard">
+<body data-page="courses">
   <div class="page-shell">
     <aside class="sidebar" id="sidebar">
       <div class="brand-card">
@@ -55,9 +55,9 @@
           <div class="topbar-left">
             <button class="menu-btn" id="menuBtn" aria-label="Buka menu">☰</button>
             <div>
-              <div class="page-kicker">Beranda</div>
-              <h1 class="page-title">Dashboard tugas yang lebih modern</h1>
-              <p class="page-subtitle">Ringkas, profesional, dan nyaman dipakai di desktop maupun HP.</p>
+              <div class="page-kicker">Mata kuliah</div>
+              <h1 class="page-title">Ringkasan per mata kuliah</h1>
+              <p class="page-subtitle">Membantu melihat distribusi tugas aktif dan beban per mata kuliah.</p>
             </div>
           </div>
           <div class="topbar-actions">
@@ -69,65 +69,9 @@
       </div>
       <div class="content">
         
-<section class="hero-grid">
-  <div class="hero-card">
-    <span class="eyebrow">✨ Dashboard lebih rapi & fokus</span>
-    <h2>Kelola tugas kuliah dengan tampilan yang lebih profesional.</h2>
-    <p>Halaman beranda kini fokus pada ringkasan penting, tugas prioritas, dan aksi cepat. Setiap fitur inti sudah dipisahkan ke halaman masing-masing agar navigasinya lebih nyaman, terutama di layar HP.</p>
-    <div class="hero-actions">
-      <a class="btn" href="tambah.html">Tambah tugas baru</a>
-      <a class="btn-secondary" href="tugas.html">Lihat semua tugas</a>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-mini"><strong id="heroDueText">0 deadline dalam 7 hari</strong><span>Deadline yang perlu diperhatikan</span></div>
-      <div class="hero-mini"><strong id="heroLoadText">0 jam estimasi minggu ini</strong><span>Perkiraan beban kerja</span></div>
-      <div class="hero-mini"><strong id="heroDoneText">0 tugas selesai minggu ini</strong><span>Produktivitas terkini</span></div>
-      <div class="hero-mini"><strong>PWA siap install</strong><span>Tetap ringan dan terasa seperti aplikasi</span></div>
-    </div>
-  </div>
-  <div class="panel">
-    <div class="panel-head">
-      <div>
-        <h3>Prioritas utama sekarang</h3>
-        <p>Tugas paling mendesak berdasarkan deadline, bobot nilai, estimasi, dan status pengerjaan.</p>
-      </div>
-    </div>
-    <div id="urgentTaskBox"></div>
-  </div>
-</section>
-
-<section class="grid-5">
-  <article class="stat-card"><div class="stat-label">Tugas aktif</div><div class="stat-value" id="statActive">0</div><div class="stat-note">Belum selesai & belum diarsipkan</div></article>
-  <article class="stat-card"><div class="stat-label">Prioritas tinggi</div><div class="stat-value" id="statHigh">0</div><div class="stat-note">Perlu perhatian cepat</div></article>
-  <article class="stat-card"><div class="stat-label">Mata kuliah aktif</div><div class="stat-value" id="statSubject">0</div><div class="stat-note">Terbentuk otomatis dari tugas</div></article>
-  <article class="stat-card"><div class="stat-label">Arsip tugas</div><div class="stat-value" id="statArchive">0</div><div class="stat-note">Riwayat tugas selesai</div></article>
-  <article class="stat-card"><div class="stat-label">Progress semester</div><div class="stat-value" id="statProgress">0%</div><div class="stat-note">Persentase tugas yang selesai</div></article>
-</section>
-
 <section class="panel">
-  <div class="panel-head">
-    <div>
-      <h3>Aksi cepat</h3>
-      <p>Navigasi kini dipisah per halaman agar tidak lagi menumpuk panjang di satu layar.</p>
-    </div>
-  </div>
-  <div class="quick-actions">
-    <a class="quick-card" href="tambah.html"><div class="icon-box">➕</div><strong>Tambah tugas</strong><p>Isi form tugas lengkap dalam halaman terpisah yang lebih fokus.</p></a>
-    <a class="quick-card" href="tugas.html"><div class="icon-box">📝</div><strong>Kelola tugas</strong><p>Lihat, cari, edit, arsipkan, dan ubah status dari satu tempat.</p></a>
-    <a class="quick-card" href="kalender.html"><div class="icon-box">📅</div><strong>Kalender deadline</strong><p>Pantau deadline 7 hari ke depan dalam tampilan yang lebih nyaman.</p></a>
-    <a class="quick-card" href="statistik.html"><div class="icon-box">📊</div><strong>Statistik</strong><p>Lihat progres, keterlambatan, beban, dan sebaran prioritas tugas.</p></a>
-  </div>
-</section>
-
-<section class="grid-2">
-  <div class="panel">
-    <div class="panel-head"><div><h3>Deadline terdekat</h3><p>Empat tugas paling dekat dalam 7 hari.</p></div></div>
-    <div class="list" id="dueSoonList"></div>
-  </div>
-  <div class="panel">
-    <div class="panel-head"><div><h3>Aktivitas terbaru</h3><p>Tugas terakhir yang dibuat atau diperbarui.</p></div></div>
-    <div class="list" id="recentTaskList"></div>
-  </div>
+  <div class="panel-head"><div><h3>Ringkasan mata kuliah</h3><p>Setiap mata kuliah dikelompokkan otomatis berdasarkan tugas yang sudah Anda masukkan.</p></div></div>
+  <div class="course-grid" id="courseGrid"></div>
 </section>
 
         <div class="footer-note">TugasKu PWA • Desain responsif • Nyaman dipakai di desktop dan HP</div>

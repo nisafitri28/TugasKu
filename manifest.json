@@ -2,12 +2,12 @@
   "id": "./",
   "name": "TugasKu - Tugas Aman, Masa Depan Nyaman",
   "short_name": "TugasKu",
-  "description": "Aplikasi PWA manajemen tugas mahasiswa untuk mencatat tugas kuliah, deadline, reminder, prioritas, progres, dan statistik akademik secara ringan.",
+  "description": "Aplikasi PWA manajemen tugas mahasiswa dengan halaman terpisah, responsif, dan nyaman dipakai di perangkat mobile.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#F5F7FF",
-  "theme_color": "#4F46E5",
+  "background_color": "#F4F7FB",
+  "theme_color": "#2563EB",
   "orientation": "portrait",
   "lang": "id",
   "icons": [
@@ -42,29 +42,15 @@
     {
       "name": "Tambah Tugas",
       "short_name": "Tambah",
-      "url": "./index.html#formTugas",
-      "icons": [
-        {
-          "src": "icons/icon-192x192-A.png",
-          "sizes": "192x192"
-        }
-      ]
+      "url": "./tambah.html",
+      "icons": [{ "src": "icons/icon-192x192-A.png", "sizes": "192x192" }]
     },
     {
       "name": "Kalender Deadline",
       "short_name": "Kalender",
-      "url": "./index.html#kalender",
-      "icons": [
-        {
-          "src": "icons/icon-192x192-A.png",
-          "sizes": "192x192"
-        }
-      ]
+      "url": "./kalender.html",
+      "icons": [{ "src": "icons/icon-192x192-A.png", "sizes": "192x192" }]
     }
   ],
-  "categories": [
-    "productivity",
-    "education",
-    "utilities"
-  ]
+  "categories": ["productivity", "education", "utilities"]
 }

@@ -2,17 +2,27 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TugasKu - Offline</title>
-  <meta name="theme-color" content="#4F46E5" />
-  <link rel="stylesheet" href="assets/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#2563EB" />
+  <meta name="description" content="TugasKu adalah PWA manajemen tugas mahasiswa dengan tampilan profesional, responsif, dan nyaman dipakai di desktop maupun HP." />
+  <link rel="icon" href="icons/icon-192x192-A.png" type="image/png" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="assets/app.css" />
+  <title>TugasKu — Offline</title>
 </head>
 <body>
-  <main class="main offline-center">
-    <section class="card offline-card">
-      <h1>⚠️ Kamu sedang offline</h1>
-      <p>TugasKu tetap bisa dibuka untuk melihat data yang sudah tersimpan di perangkat. Sambungkan internet kembali jika ingin memuat aset baru atau memasang pembaruan aplikasi.</p>
-    </section>
+  <main class="simple-center">
+    <div class="offline-card">
+      <div class="empty-icon">📡</div>
+      <h1>Koneksi sedang tidak tersedia</h1>
+      <p>Tidak masalah. TugasKu masih bisa dibuka lagi ketika koneksi kembali stabil. Beberapa data yang sudah tersimpan di perangkat tetap aman di localStorage.</p>
+      <div class="form-actions" style="justify-content:center; margin-top:18px;">
+        <a class="btn" href="index.html">Kembali ke beranda</a>
+      </div>
+    </div>
   </main>
 </body>
 </html>
