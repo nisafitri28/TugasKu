@@ -126,18 +126,16 @@
   "widgets": [
     {
       "name": "Ringkasan TugasKu",
-      "short_name": "Widget TugasKu",
-      "description": "Widget ringkasan tugas dengan statistik cepat dan tombol menuju daftar tugas, tambah tugas, dan kalender deadline.",
+      "short_name": "TugasKu Widget",
+      "description": "Widget Windows untuk membuka TugasKu, menambah tugas baru, dan melihat kalender deadline.",
       "tag": "tugasku-summary",
-      "template": "tugasku-summary-card",
+      "template": "tugasku-widget",
       "ms_ac_template": "widgets/tugasku-widget-template.json",
-      "data": "widgets/tugasku-widget-data.json",
-      "type": "application/json",
       "screenshots": [
         {
           "src": "widgets/widget-screenshot.png",
           "sizes": "600x400",
-          "label": "Widget ringkasan TugasKu untuk Windows",
+          "label": "Widget ringkasan TugasKu",
           "platform": "Windows"
         }
       ],
@@ -148,9 +146,8 @@
           "type": "image/png"
         }
       ],
-      "multiple": false,
       "auth": false,
-      "update": 3600
+      "multiple": false
     }
   ]
 }

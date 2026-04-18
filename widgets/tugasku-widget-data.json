@@ -1,9 +1,4 @@
 {
-  "title": "TugasKu",
-  "subtitle": "Ringkasan cepat tugas kuliah dan deadline terdekat.",
-  "total": "0",
-  "active": "0",
-  "dueSoon": "0",
-  "todayLabel": "Belum ada deadline dekat. Tambah tugas baru untuk mulai mencatat.",
-  "progress": "0%"
+  "app": "TugasKu",
+  "message": "Widget siap dipakai."
 }
