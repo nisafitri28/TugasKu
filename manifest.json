@@ -72,5 +72,13 @@
     "productivity",
     "education",
     "utilities"
-  ]
+  ],
+  "dir": "ltr",
+  "display_override": [
+    "standalone",
+    "browser"
+  ],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  }
 }

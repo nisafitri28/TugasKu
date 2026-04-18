@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tugasku-pwa-v6';
+const CACHE_NAME = 'tugasku-pwa-v7';
 const BASE_URL = self.registration.scope;
 
 const pages = [
