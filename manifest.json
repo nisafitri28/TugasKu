@@ -75,10 +75,46 @@
   ],
   "dir": "ltr",
   "display_override": [
+    "window-controls-overlay",
     "standalone",
     "browser"
   ],
   "launch_handler": {
     "client_mode": "focus-existing"
+  },
+  "prefer_related_applications": false,
+  "note_taking": {
+    "new_note_url": "./tambah.html"
+  },
+  "share_target": {
+    "action": "./tambah.html",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+tugasku",
+      "url": "./tambah.html?protocol=%s"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "./tambah.html",
+      "accept": {
+        "application/json": [
+          ".json"
+        ],
+        "text/plain": [
+          ".txt"
+        ]
+      }
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 420
   }
 }

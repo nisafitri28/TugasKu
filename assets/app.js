@@ -3,6 +3,7 @@ const TASKS_KEY = 'tugasku_tasks';
 const LEGACY_TASKS_KEY = 'taskflow_tasks';
 const SETTINGS_KEY = 'tugasku_settings';
 const EDIT_KEY = 'tugasku_edit_id';
+const INCOMING_DRAFT_KEY = 'tugasku_incoming_draft';
 const defaultReminderOffsets = [10080, 4320, 1440, 120];
 let tasks = [];
 let settings = { default7: true, default3: true, default1: true, default2h: true, theme: 'light' };
@@ -707,6 +708,168 @@ function renderSettingsPage() {
   renderNotificationStatus();
 }
 
+
+function setFieldValue(id, value) {
+  const field = $(id);
+  if (field && typeof value !== 'undefined' && value !== null) field.value = value;
+}
+
+function mergeTextParts(...parts) {
+  return parts.map(part => String(part || '').trim()).filter(Boolean).join('\n\n');
+}
+
+function buildDraftFromParams(params) {
+  const sharedTitle = params.get('title')?.trim() || '';
+  const sharedText = params.get('text')?.trim() || '';
+  const sharedUrl = params.get('url')?.trim() || '';
+  const protocolRaw = params.get('protocol') || '';
+  let protocolValue = '';
+  if (protocolRaw) {
+    try {
+      protocolValue = decodeURIComponent(protocolRaw);
+    } catch (error) {
+      protocolValue = protocolRaw;
+    }
+  }
+  if (!sharedTitle && !sharedText && !sharedUrl && !protocolValue) return null;
+  const title = sharedTitle || (sharedText ? sharedText.split('\n').map(item => item.trim()).find(Boolean) || 'Tugas baru dari Share' : 'Tugas baru dari Share');
+  const description = mergeTextParts(
+    sharedText && sharedText !== title ? sharedText : '',
+    sharedUrl ? `Sumber: ${sharedUrl}` : '',
+    protocolValue ? `Deep link: ${protocolValue}` : ''
+  );
+  return {
+    taskInput: title,
+    descriptionInput: description,
+    channelInput: sharedUrl ? 'WhatsApp' : 'LMS'
+  };
+}
+
+function saveIncomingDraft(draft) {
+  if (!draft) return;
+  localStorage.setItem(INCOMING_DRAFT_KEY, JSON.stringify(draft));
+}
+
+function consumeIncomingDraft() {
+  const raw = localStorage.getItem(INCOMING_DRAFT_KEY);
+  if (!raw) return null;
+  localStorage.removeItem(INCOMING_DRAFT_KEY);
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    console.error('Draft masuk gagal dibaca', error);
+    return null;
+  }
+}
+
+function applyDraftToForm(draft, sourceLabel='sumber eksternal') {
+  if (!draft) return false;
+  setFieldValue('taskInput', draft.taskInput || '');
+  setFieldValue('subjectInput', draft.subjectInput || '');
+  setFieldValue('deadlineInput', draft.deadlineInput || '');
+  setFieldValue('descriptionInput', draft.descriptionInput || '');
+  setFieldValue('lecturerInput', draft.lecturerInput || '');
+  if (draft.channelInput && $('channelInput')) $('channelInput').value = draft.channelInput;
+  if (draft.typeInput && $('typeInput')) $('typeInput').value = draft.typeInput;
+  if (draft.modeInput && $('modeInput')) $('modeInput').value = draft.modeInput;
+  if (draft.estimateInput && $('estimateInput')) $('estimateInput').value = String(draft.estimateInput);
+  if (draft.priority) setPriority(draft.priority);
+  setText('formStateText', `Draft form berhasil diisi dari ${sourceLabel}. Silakan cek kembali sebelum menyimpan.`);
+  return true;
+}
+
+function handleIncomingDraftParams() {
+  const params = new URLSearchParams(location.search);
+  const draft = buildDraftFromParams(params);
+  if (!draft) return false;
+  applyDraftToForm(draft, params.get('protocol') ? 'deep link' : 'share target');
+  history.replaceState({}, document.title, location.pathname);
+  return true;
+}
+
+function buildDraftFromTextFile(text, filename='') {
+  const lines = String(text || '').split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+  if (!lines.length) return null;
+  return {
+    taskInput: lines[0] || filename || 'Draft tugas impor',
+    descriptionInput: mergeTextParts(lines.slice(1).join('\n'), filename ? `Sumber file: ${filename}` : ''),
+    channelInput: 'Offline'
+  };
+}
+
+function buildDraftFromJson(jsonData, filename='') {
+  const source = Array.isArray(jsonData) ? jsonData[0] : jsonData;
+  if (!source || typeof source !== 'object') return null;
+  const taskName = source.text || source.title || source.name || filename || 'Draft tugas impor';
+  return {
+    taskInput: taskName,
+    subjectInput: source.subject || source.course || '',
+    deadlineInput: source.deadline || '',
+    descriptionInput: mergeTextParts(source.description || source.notes || '', filename ? `Sumber file: ${filename}` : ''),
+    lecturerInput: source.lecturer || '',
+    channelInput: source.channel || 'Offline',
+    typeInput: source.type || 'Tugas',
+    modeInput: source.workMode || source.mode || 'Individu',
+    estimateInput: source.estimateMinutes || 120,
+    priority: ['high', 'medium', 'low'].includes(source.priority) ? source.priority : 'medium'
+  };
+}
+
+async function handleLaunchFiles() {
+  if (!('launchQueue' in window) || typeof window.launchQueue.setConsumer !== 'function') return;
+  window.launchQueue.setConsumer(async (launchParams) => {
+    if (!launchParams?.files?.length) return;
+    try {
+      const fileHandle = launchParams.files[0];
+      const file = await fileHandle.getFile();
+      const filename = file.name || '';
+      const content = await file.text();
+      let draft = null;
+      if (file.type === 'application/json' || filename.toLowerCase().endsWith('.json')) {
+        draft = buildDraftFromJson(JSON.parse(content), filename);
+      } else {
+        draft = buildDraftFromTextFile(content, filename);
+      }
+      if (!draft) return;
+      if (page() === 'form') applyDraftToForm(draft, 'file yang dibuka');
+      else {
+        saveIncomingDraft(draft);
+        location.href = 'tambah.html?from=file';
+      }
+    } catch (error) {
+      console.error('Gagal memproses file yang dibuka lewat PWA', error);
+    }
+  });
+}
+
+async function setupBackgroundFeatures() {
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    if ('sync' in registration) {
+      try {
+        await registration.sync.register('refresh-app-shell');
+      } catch (error) {
+        console.warn('Background Sync belum aktif di browser ini.', error);
+      }
+    }
+    if ('periodicSync' in registration && 'permissions' in navigator) {
+      try {
+        const status = await navigator.permissions.query({ name: 'periodic-background-sync' });
+        if (status.state === 'granted') {
+          await registration.periodicSync.register('refresh-app-shell-periodic', {
+            minInterval: 24 * 60 * 60 * 1000
+          });
+        }
+      } catch (error) {
+        console.warn('Periodic Background Sync belum tersedia.', error);
+      }
+    }
+  } catch (error) {
+    console.error('Gagal menyiapkan background features', error);
+  }
+}
+
 function parseChecklist(text) {
   return text.split('\n').map(item => item.trim()).filter(Boolean).map(item => ({ text: item, done: false }));
 }
@@ -774,6 +937,10 @@ function initFormPage() {
       setText('formStateText', 'Mode edit aktif. Setelah disimpan, data tugas akan diperbarui.');
       setText('submitTaskText', 'Perbarui tugas');
     }
+  } else {
+    const storedDraft = consumeIncomingDraft();
+    if (storedDraft) applyDraftToForm(storedDraft, 'draft impor');
+    handleIncomingDraftParams();
   }
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -1047,6 +1214,8 @@ function initPage() {
   setupInstallButtons();
   checkDueReminders();
   initThemeListeners();
+  handleLaunchFiles();
+  setupBackgroundFeatures();
   if (page() === 'dashboard') renderDashboard();
   if (page() === 'form') initFormPage();
   if (page() === 'tasks') { bindTaskFilters(); renderTasksPage(); }
@@ -1063,8 +1232,13 @@ setInterval(checkDueReminders, 60000);
 document.addEventListener('DOMContentLoaded', initPage);
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch(err => console.error('Service Worker error', err));
+  window.addEventListener('load', async () => {
+    try {
+      await navigator.serviceWorker.register('./service-worker.js');
+      setupBackgroundFeatures();
+    } catch (err) {
+      console.error('Service Worker error', err);
+    }
   });
 }
 
