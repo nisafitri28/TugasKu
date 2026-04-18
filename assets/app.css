@@ -663,11 +663,20 @@ textarea { min-height: 114px; resize: vertical; }
   .sidebar {
     position: fixed; left: 0; top: 0; bottom: 0; width: min(86vw, 320px); height: 100dvh;
     transform: translateX(-110%); transition: transform .22s ease; box-shadow: 28px 0 60px rgba(15,23,42,.2);
-    border-right: 1px solid rgba(226, 232, 240, .9);
+    border-right: 1px solid rgba(226, 232, 240, .9); z-index: 40;
   }
   .sidebar.open { transform: translateX(0); }
   .menu-btn { display:flex; }
-  .mobile-nav { display:grid; }
+  .mobile-nav {
+    display:grid;
+    transition: transform .22s ease, opacity .22s ease;
+  }
+  body.no-scroll .mobile-nav {
+    transform: translateY(calc(100% + 24px));
+    opacity: 0;
+    pointer-events: none;
+  }
+  .overlay { z-index: 35; }
   .hero-grid, .grid-4, .grid-3, .grid-2, .filters, .form-grid, .calendar-grid, .course-grid { grid-template-columns: 1fr; }
   .grid-5 { grid-template-columns: repeat(2, 1fr); }
   .topbar-actions { width:100%; justify-content:flex-start; }
