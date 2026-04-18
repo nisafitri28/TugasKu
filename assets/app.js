@@ -1185,19 +1185,28 @@ function setupSidebar() {
   const sidebar = $('sidebar');
   const overlay = $('overlay');
   if (!menuBtn || !sidebar || !overlay) return;
-  const close = () => {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('show');
-    document.body.classList.remove('no-scroll');
+
+  const setSidebarState = (isOpen) => {
+    sidebar.classList.toggle('open', isOpen);
+    overlay.classList.toggle('show', isOpen);
+    document.body.classList.toggle('no-scroll', isOpen);
+    document.body.classList.toggle('sidebar-open', isOpen);
+    menuBtn.setAttribute('aria-expanded', String(isOpen));
   };
+
+  const close = () => setSidebarState(false);
+  const open = () => setSidebarState(true);
+
   menuBtn.addEventListener('click', () => {
-    sidebar.classList.add('open');
-    overlay.classList.add('show');
-    document.body.classList.add('no-scroll');
+    const isOpen = sidebar.classList.contains('open');
+    setSidebarState(!isOpen);
   });
   overlay.addEventListener('click', close);
   document.querySelectorAll('[data-close-sidebar]').forEach(el => el.addEventListener('click', close));
   document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 980) close();
+  });
 }
 
 function setActiveNav() {
