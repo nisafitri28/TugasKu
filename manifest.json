@@ -6,7 +6,7 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#F4F7FB",
+  "background_color": "#FBFDFF",
   "theme_color": "#2563EB",
   "orientation": "portrait",
   "lang": "id",
@@ -27,15 +27,17 @@
   "screenshots": [
     {
       "src": "icons/screenshot1.png",
-      "sizes": "1080x1920",
+      "sizes": "1442x3090",
       "type": "image/png",
-      "form_factor": "narrow"
+      "form_factor": "narrow",
+      "label": "Tampilan onboarding atau contoh layar aplikasi mobile."
     },
     {
       "src": "icons/screenshot2.png",
-      "sizes": "1080x1920",
+      "sizes": "1442x3090",
       "type": "image/png",
-      "form_factor": "narrow"
+      "form_factor": "narrow",
+      "label": "Tampilan kedua aplikasi pada mode portrait."
     }
   ],
   "shortcuts": [
@@ -43,14 +45,32 @@
       "name": "Tambah Tugas",
       "short_name": "Tambah",
       "url": "./tambah.html",
-      "icons": [{ "src": "icons/icon-192x192-A.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "icons/icon-192x192-A.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        }
+      ]
     },
     {
       "name": "Kalender Deadline",
       "short_name": "Kalender",
       "url": "./kalender.html",
-      "icons": [{ "src": "icons/icon-192x192-A.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "icons/icon-192x192-A.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        }
+      ]
     }
   ],
-  "categories": ["productivity", "education", "utilities"]
+  "categories": [
+    "productivity",
+    "education",
+    "utilities"
+  ]
 }
