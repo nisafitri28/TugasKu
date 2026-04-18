@@ -40,6 +40,52 @@ function loadTasks() {
 function saveTasks() {
   localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
   localStorage.setItem(LEGACY_TASKS_KEY, JSON.stringify(tasks));
+  syncWidgetSummaryToServiceWorker();
+}
+
+
+function getWidgetSummaryPayload() {
+  const summary = getSummary();
+  const urgentTask = tasks
+    .filter(task => !task.archived && !task.completed)
+    .sort(sortBySmartPriority)[0];
+  const dueSoonToday = tasks.filter(task => {
+    if (!task.deadline || task.archived || task.completed) return false;
+    const diff = new Date(task.deadline).getTime() - Date.now();
+    return diff >= 0 && diff <= 2 * 86400000;
+  }).length;
+  const statusLabel = dueSoonToday
+    ? `${dueSoonToday} deadline hari ini atau besok.`
+    : summary.overdue
+      ? `${summary.overdue} tugas sudah melewati deadline.`
+      : 'Belum ada deadline dekat.';
+
+  return {
+    title: 'TugasKu',
+    subtitle: urgentTask
+      ? `Prioritas saat ini: ${urgentTask.text}`
+      : 'Ringkasan cepat tugas kuliah dan deadline terdekat.',
+    total: String(summary.total),
+    active: String(summary.active),
+    dueSoon: String(summary.dueThisWeek),
+    todayLabel: statusLabel,
+    progress: `${summary.progress}%`
+  };
+}
+
+async function syncWidgetSummaryToServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  const payload = { type: 'UPDATE_WIDGET_SUMMARY', summary: getWidgetSummaryPayload() };
+  try {
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage(payload);
+    }
+    const registration = await navigator.serviceWorker.ready;
+    const worker = registration.active || registration.waiting || registration.installing;
+    worker?.postMessage(payload);
+  } catch (error) {
+    console.warn('Sinkronisasi widget belum aktif di browser ini.', error);
+  }
 }
 
 function loadSettings() {
@@ -1208,6 +1254,7 @@ function initPage() {
   loadSettings();
   applyTheme();
   loadTasks();
+  syncWidgetSummaryToServiceWorker();
   setupSidebar();
   setActiveNav();
   updateHeaderStats();

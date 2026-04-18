@@ -1,5 +1,9 @@
-const CACHE_NAME = 'tugasku-pwa-v8';
+const CACHE_NAME = 'tugasku-pwa-v9';
 const BASE_URL = self.registration.scope;
+const WIDGET_TAG = 'tugasku-summary';
+const WIDGET_TEMPLATE_URL = new URL('widgets/tugasku-widget-template.json', BASE_URL).href;
+const WIDGET_DATA_URL = new URL('widgets/tugasku-widget-data.json', BASE_URL).href;
+const WIDGET_RUNTIME_DATA_URL = new URL('widgets/tugasku-widget-data.runtime.json', BASE_URL).href;
 
 const APP_SHELL = [
   '',
@@ -18,12 +22,67 @@ const APP_SHELL = [
   'icons/icon-192x192-A.png',
   'icons/icon-512x512-B.png',
   'icons/screenshot1.png',
-  'icons/screenshot2.png'
+  'icons/screenshot2.png',
+  'widgets/tugasku-widget-template.json',
+  'widgets/tugasku-widget-data.json',
+  'widgets/widget-screenshot.png'
 ].map(path => `${BASE_URL}${path}`);
 
 async function warmCache() {
   const cache = await caches.open(CACHE_NAME);
   return cache.addAll(APP_SHELL);
+}
+
+async function getTextAsset(url, { network = true } = {}) {
+  if (network) {
+    try {
+      const response = await fetch(url, { cache: 'no-cache' });
+      if (response && response.ok) return await response.text();
+    } catch (error) {
+      // Fallback ke cache bila sedang offline atau browser memblokir request.
+    }
+  }
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(url);
+  return cached ? cached.text() : '';
+}
+
+async function getWidgetDataText() {
+  const runtimeData = await getTextAsset(WIDGET_RUNTIME_DATA_URL, { network: false });
+  if (runtimeData) return runtimeData;
+  return getTextAsset(WIDGET_DATA_URL);
+}
+
+async function updateSummaryWidget() {
+  if (!self.widgets || typeof self.widgets.getByTag !== 'function' || typeof self.widgets.updateByTag !== 'function') {
+    return;
+  }
+  const widget = await self.widgets.getByTag(WIDGET_TAG);
+  if (!widget) return;
+  const templateUrl = widget.definition?.msAcTemplate ? new URL(widget.definition.msAcTemplate, BASE_URL).href : WIDGET_TEMPLATE_URL;
+  const template = await getTextAsset(templateUrl);
+  const data = await getWidgetDataText();
+  if (!template || !data) return;
+  await self.widgets.updateByTag(widget.definition?.tag || WIDGET_TAG, { template, data });
+}
+
+async function storeWidgetSummary(summary) {
+  const safeSummary = {
+    title: String(summary?.title || 'TugasKu'),
+    subtitle: String(summary?.subtitle || 'Ringkasan cepat tugas kuliah dan deadline terdekat.'),
+    total: String(summary?.total || '0'),
+    active: String(summary?.active || '0'),
+    dueSoon: String(summary?.dueSoon || '0'),
+    todayLabel: String(summary?.todayLabel || 'Belum ada deadline dekat.'),
+    progress: String(summary?.progress || '0%')
+  };
+  const cache = await caches.open(CACHE_NAME);
+  await cache.put(
+    WIDGET_RUNTIME_DATA_URL,
+    new Response(JSON.stringify(safeSummary, null, 2), {
+      headers: { 'Content-Type': 'application/json; charset=utf-8' }
+    })
+  );
 }
 
 async function refreshAppShell() {
@@ -36,6 +95,23 @@ async function refreshAppShell() {
       // Abaikan asset yang sedang tidak bisa diakses saat offline
     }
   }));
+  await updateSummaryWidget();
+}
+
+async function openOrFocusWindow(path) {
+  const targetUrl = new URL(path, BASE_URL).href;
+  const clientList = await clients.matchAll({ type: 'window', includeUncontrolled: true });
+  for (const client of clientList) {
+    if ('focus' in client) {
+      try {
+        await client.navigate(targetUrl);
+      } catch (error) {
+        // Abaikan navigasi yang gagal, lalu tetap fokus ke client yang ada.
+      }
+      return client.focus();
+    }
+  }
+  if (clients.openWindow) return clients.openWindow(targetUrl);
 }
 
 self.addEventListener('install', event => {
@@ -48,6 +124,7 @@ self.addEventListener('activate', event => {
     const keys = await caches.keys();
     await Promise.all(keys.map(key => key !== CACHE_NAME ? caches.delete(key) : Promise.resolve()));
     await self.clients.claim();
+    await updateSummaryWidget();
   })());
 });
 
@@ -102,15 +179,36 @@ self.addEventListener('push', event => {
 
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  const targetUrl = new URL(event.notification.data?.url || 'tugas.html', BASE_URL).href;
-  event.waitUntil((async () => {
-    const clientsList = await clients.matchAll({ type: 'window', includeUncontrolled: true });
-    for (const client of clientsList) {
-      if ('focus' in client) {
-        client.navigate(targetUrl);
-        return client.focus();
-      }
-    }
-    if (clients.openWindow) return clients.openWindow(targetUrl);
-  })());
+  const targetPath = event.notification.data?.url || 'tugas.html';
+  event.waitUntil(openOrFocusWindow(targetPath));
+});
+
+self.addEventListener('widgetinstall', event => {
+  if (typeof event.waitUntil === 'function') {
+    event.waitUntil(updateSummaryWidget());
+  }
+});
+
+self.addEventListener('widgetclick', event => {
+  const actionMap = {
+    'open-dashboard': 'index.html',
+    'open-tasks': 'tugas.html',
+    'new-task': 'tambah.html',
+    'open-calendar': 'kalender.html'
+  };
+  const target = actionMap[event.action];
+  if (!target) return;
+  if (typeof event.waitUntil === 'function') {
+    event.waitUntil(openOrFocusWindow(target));
+  }
+});
+
+self.addEventListener('message', event => {
+  const message = event.data || {};
+  if (message.type !== 'UPDATE_WIDGET_SUMMARY') return;
+  const work = (async () => {
+    await storeWidgetSummary(message.summary || {});
+    await updateSummaryWidget();
+  })();
+  if (typeof event.waitUntil === 'function') event.waitUntil(work);
 });
