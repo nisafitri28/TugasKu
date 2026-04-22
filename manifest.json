@@ -6,8 +6,8 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#FBFDFF",
-  "theme_color": "#2563EB",
+  "background_color": "#F0F6FB",
+  "theme_color": "#005090",
   "orientation": "portrait",
   "lang": "id",
   "icons": [
@@ -74,19 +74,7 @@
     "utilities"
   ],
   "dir": "ltr",
-  "display_override": [
-    "tabbed",
-    "window-controls-overlay",
-    "standalone",
-    "browser"
-  ],
-  "launch_handler": {
-    "client_mode": "focus-existing"
-  },
   "prefer_related_applications": false,
-  "note_taking": {
-    "new_note_url": "./tambah.html"
-  },
   "share_target": {
     "action": "./tambah.html",
     "method": "GET",
@@ -100,54 +88,6 @@
     {
       "protocol": "web+tugasku",
       "url": "./tambah.html?protocol=%s"
-    }
-  ],
-  "file_handlers": [
-    {
-      "action": "./tambah.html",
-      "accept": {
-        "application/json": [
-          ".json"
-        ],
-        "text/plain": [
-          ".txt"
-        ]
-      }
-    }
-  ],
-  "edge_side_panel": {
-    "preferred_width": 420
-  },
-  "tab_strip": {
-    "new_tab_button": {
-      "url": "./tambah.html"
-    }
-  },
-  "widgets": [
-    {
-      "name": "Ringkasan TugasKu",
-      "short_name": "TugasKu Widget",
-      "description": "Widget Windows untuk membuka TugasKu, menambah tugas baru, dan melihat kalender deadline.",
-      "tag": "tugasku-summary",
-      "template": "tugasku-widget",
-      "ms_ac_template": "widgets/tugasku-widget-template.json",
-      "screenshots": [
-        {
-          "src": "widgets/widget-screenshot.png",
-          "sizes": "600x400",
-          "label": "Widget ringkasan TugasKu",
-          "platform": "Windows"
-        }
-      ],
-      "icons": [
-        {
-          "src": "icons/icon-192x192-A.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ],
-      "auth": false,
-      "multiple": false
     }
   ]
 }

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tugasku-pwa-v9';
+const CACHE_NAME = 'tugasku-pwa-v11';
 const BASE_URL = self.registration.scope;
 const WIDGET_TAG = 'tugasku-summary';
 const WIDGET_TEMPLATE_URL = new URL('widgets/tugasku-widget-template.json', BASE_URL).href;
@@ -135,7 +135,33 @@ self.addEventListener('fetch', event => {
   if (url.protocol.startsWith('chrome-extension')) return;
 
   if (request.mode === 'navigate') {
-    event.respondWith(fetch(request).catch(() => caches.match(`${BASE_URL}offline.html`)));
+    event.respondWith((async () => {
+      try {
+        const fresh = await fetch(request);
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, fresh.clone());
+        return fresh;
+      } catch (error) {
+        const cachedPage = await caches.match(request);
+        if (cachedPage) return cachedPage;
+
+        const normalizedUrl = new URL(request.url);
+        const pathname = normalizedUrl.pathname.endsWith('/')
+          ? `${normalizedUrl.pathname}index.html`
+          : normalizedUrl.pathname;
+        const relativePath = pathname.startsWith(self.location.pathname.replace(/service-worker\.js$/, ''))
+          ? pathname.slice(self.location.pathname.replace(/service-worker\.js$/, '').length)
+          : pathname.replace(/^\//, '');
+
+        const pageFromBase = await caches.match(new URL(relativePath || 'index.html', BASE_URL).href);
+        if (pageFromBase) return pageFromBase;
+
+        const homePage = await caches.match(`${BASE_URL}index.html`);
+        if (homePage) return homePage;
+
+        return caches.match(`${BASE_URL}offline.html`);
+      }
+    })());
     return;
   }
 
