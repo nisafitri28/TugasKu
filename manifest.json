@@ -2,7 +2,7 @@
   "id": "./",
   "name": "TugasKu - Tugas Aman, Masa Depan Nyaman",
   "short_name": "TugasKu",
-  "description": "Aplikasi PWA manajemen tugas mahasiswa dengan halaman terpisah, responsif, dan nyaman dipakai di perangkat mobile.",
+  "description": "Aplikasi manajemen tugas mahasiswa",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
