@@ -6,10 +6,16 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
   "background_color": "#F0F6FB",
   "theme_color": "#005090",
   "orientation": "portrait",
   "lang": "id",
+  "iarc_rating_id": "",
   "icons": [
     {
       "src": "icons/icon-192x192-A.png",
@@ -96,5 +102,7 @@
       "url": "./tambah.html?protocol=%s"
     }
   ],
+  "related_applications": [],
+  "scope_extensions": [],
   "prefer_related_applications": false
 }
