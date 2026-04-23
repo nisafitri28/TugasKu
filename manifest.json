@@ -38,14 +38,14 @@
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Tampilan kedua aplikasi pada mode portrait."
-    }
- {
-      "src": "icons/screenshot3.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Tampilan aplikasi di perangkat desktop"
-    }
+    },
+  {
+    "src": "icons/screenshot3.png",
+    "sizes": "1280x720",
+    "type": "image/png",
+    "form_factor": "wide",
+    "label": "Tampilan aplikasi di perangkat desktop"
+  }
   ],
   "shortcuts": [
     {

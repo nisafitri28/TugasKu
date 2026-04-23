@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tugasku-pwa-v11';
+const CACHE_NAME = 'tugasku-pwa-v12';
 const BASE_URL = self.registration.scope;
 const WIDGET_TAG = 'tugasku-summary';
 const WIDGET_TEMPLATE_URL = new URL('widgets/tugasku-widget-template.json', BASE_URL).href;
@@ -18,7 +18,6 @@ const APP_SHELL = [
   'assets/app.css',
   'assets/app.js',
   'assets/style.css',
-  'manifest.json',
   'icons/icon-192x192-A.png',
   'icons/icon-512x512-B.png',
   'icons/screenshot1.png',
@@ -133,6 +132,20 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   if (request.method !== 'GET') return;
   if (url.protocol.startsWith('chrome-extension')) return;
+
+  if (url.origin === self.location.origin && url.pathname.endsWith('/manifest.json')) {
+    event.respondWith((async () => {
+      try {
+        const fresh = await fetch(request, { cache: 'no-cache' });
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, fresh.clone());
+        return fresh;
+      } catch (error) {
+        return (await caches.match(request)) || fetch(request);
+      }
+    })());
+    return;
+  }
 
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
