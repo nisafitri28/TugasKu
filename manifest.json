@@ -6,6 +6,11 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
   "background_color": "#F0F6FB",
   "theme_color": "#005090",
   "orientation": "portrait",
@@ -96,12 +101,6 @@
       "url": "./tambah.html?protocol=%s"
     }
   ],
-  "prefer_related_applications": false,
-  "display_override": [
-    "standalone",
-    "minimal-ui",
-    "browser"
-  ],
   "related_applications": [
     {
       "platform": "webapp",
@@ -109,5 +108,6 @@
     }
   ],
   "iarc_rating_id": "",
-  "scope_extensions": []
+  "scope_extensions": [],
+  "prefer_related_applications": false
 }
