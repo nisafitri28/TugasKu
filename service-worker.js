@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tugasku-pwa-v16';
+const CACHE_NAME = 'tugasku-pwa-v17';
 const BASE_URL = self.registration.scope;
 const WIDGET_TAG = 'tugasku-summary';
 const WIDGET_TEMPLATE_URL = new URL('widgets/tugasku-widget-template.json', BASE_URL).href;
@@ -33,7 +33,10 @@ const APP_SHELL = [
   'icons/screenshot8.png',
   'widgets/tugasku-widget-template.json',
   'widgets/tugasku-widget-data.json',
-  'widgets/widget-screenshot.png'
+  'widgets/widget-screenshot.png',
+  'widgets/widget-icon-96.png',
+  'widgets/widget-icon-128.png',
+  'widgets/widget-icon-256.png'
 ].map(path => `${BASE_URL}${path}`);
 
 async function warmCache() {
@@ -277,6 +280,18 @@ self.addEventListener('notificationclick', event => {
 self.addEventListener('widgetinstall', event => {
   if (typeof event.waitUntil === 'function') {
     event.waitUntil(updateSummaryWidget());
+  }
+});
+
+self.addEventListener('widgetresume', event => {
+  if (typeof event.waitUntil === 'function') {
+    event.waitUntil(updateSummaryWidget());
+  }
+});
+
+self.addEventListener('widgetuninstall', event => {
+  if (typeof event.waitUntil === 'function') {
+    event.waitUntil(Promise.resolve());
   }
 });
 

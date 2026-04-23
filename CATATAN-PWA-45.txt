@@ -9,3 +9,11 @@ Penting:
 - iarc_rating_id saat ini placeholder: REPLACE_WITH_REAL_IARC_CERT_ID
 - scope_extensions saat ini placeholder ke https://example.com dan sebaiknya diganti dengan domain/subdomain asli bila memang app Anda memakai multi-origin.
 - related_applications saat ini dibuat sebagai self-reference ke web app.
+
+
+Update v3:
+- Widget manifest disesuaikan lebih dekat ke dokumentasi Microsoft Edge/PWAmp.
+- Ditambahkan platform pada widget screenshot.
+- Ditambahkan ikon widget multi-ukuran (96, 128, 256, 192, 512).
+- Cache/service worker dinaikkan ke v17.
+- iarc_rating_id sengaja tidak dipalsukan; butuh ID IARC asli agar valid secara etis dan faktual.
