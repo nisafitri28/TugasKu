@@ -39,13 +39,13 @@
       "form_factor": "narrow",
       "label": "Tampilan kedua aplikasi pada mode portrait."
     },
-  {
-    "src": "icons/screenshot3.png",
-    "sizes": "2860x1537",
-    "type": "image/png",
-    "form_factor": "wide",
-    "label": "Tampilan aplikasi di perangkat desktop"
-  }
+    {
+      "src": "icons/screenshot3.png",
+      "sizes": "2860x1537",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Tampilan aplikasi di perangkat desktop"
+    }
   ],
   "shortcuts": [
     {
@@ -95,5 +95,6 @@
       "protocol": "web+tugasku",
       "url": "./tambah.html?protocol=%s"
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }
