@@ -74,7 +74,6 @@
     "utilities"
   ],
   "dir": "ltr",
-  "prefer_related_applications": false,
   "share_target": {
     "action": "./tambah.html",
     "method": "GET",
