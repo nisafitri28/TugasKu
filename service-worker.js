@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tugasku-pwa-v15';
+const CACHE_NAME = 'tugasku-pwa-v16';
 const BASE_URL = self.registration.scope;
 const WIDGET_TAG = 'tugasku-summary';
 const WIDGET_TEMPLATE_URL = new URL('widgets/tugasku-widget-template.json', BASE_URL).href;

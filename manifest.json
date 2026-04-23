@@ -1,5 +1,5 @@
 {
-  "id": "./index.html",
+  "id": "./",
   "name": "TugasKu - Tugas Aman, Masa Depan Nyaman",
   "short_name": "TugasKu",
   "description": "Aplikasi PWA manajemen tugas mahasiswa untuk mencatat deadline, membuka file tugas, menerima share, dan tetap produktif secara offline.",
@@ -193,29 +193,27 @@
       "short_name": "Ringkasan",
       "description": "Widget ringkasan tugas aktif, deadline terdekat, dan aksi cepat.",
       "tag": "tugasku-summary",
-      "template": "tugasku-summary-template",
-      "ms_ac_template": "widgets/tugasku-widget-template.json",
-      "data": "widgets/tugasku-widget-data.json",
+      "template": "summary",
+      "data": "./widgets/tugasku-widget-data.json",
       "type": "application/json",
-      "screenshots": [
-        {
-          "src": "widgets/widget-screenshot.png",
-          "sizes": "600x400",
-          "type": "image/png",
-          "platform": "Windows",
-          "label": "Widget ringkasan TugasKu di Windows"
-        }
-      ],
+      "auth": false,
+      "update": 86400,
+      "multiple": false,
       "icons": [
         {
-          "src": "icons/icon-192x192-A.png",
+          "src": "./icons/icon-192x192-A.png",
           "sizes": "192x192",
           "type": "image/png"
         }
       ],
-      "auth": false,
-      "update": 86400,
-      "multiple": true
+      "screenshots": [
+        {
+          "src": "./widgets/widget-screenshot.png",
+          "sizes": "600x400",
+          "label": "Widget ringkasan TugasKu"
+        }
+      ],
+      "ms_ac_template": "./widgets/tugasku-widget-template.json"
     }
   ],
   "edge_side_panel": {
@@ -229,5 +227,19 @@
   "note_taking": {
     "new_note_url": "./tambah.html?source=note"
   },
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "./manifest.json",
+      "id": "./"
+    }
+  ],
+  "iarc_rating_id": "REPLACE_WITH_REAL_IARC_CERT_ID",
+  "scope_extensions": [
+    {
+      "type": "origin",
+      "origin": "https://example.com"
+    }
+  ]
 }

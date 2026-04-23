@@ -1,0 +1,11 @@
+Catatan PWA 45/45
+
+Field berikut ditambahkan untuk mengejar skor PWABuilder:
+- related_applications
+- iarc_rating_id
+- scope_extensions
+
+Penting:
+- iarc_rating_id saat ini placeholder: REPLACE_WITH_REAL_IARC_CERT_ID
+- scope_extensions saat ini placeholder ke https://example.com dan sebaiknya diganti dengan domain/subdomain asli bila memang app Anda memakai multi-origin.
+- related_applications saat ini dibuat sebagai self-reference ke web app.
