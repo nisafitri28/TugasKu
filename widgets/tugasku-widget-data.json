@@ -1,4 +1,9 @@
 {
-  "app": "TugasKu",
-  "message": "Widget siap dipakai."
+  "title": "TugasKu",
+  "subtitle": "Ringkasan cepat tugas kuliah dan deadline terdekat.",
+  "total": "0",
+  "active": "0",
+  "dueSoon": "0",
+  "todayLabel": "Belum ada deadline dekat.",
+  "progress": "0%"
 }

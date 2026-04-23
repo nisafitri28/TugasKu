@@ -1,9 +1,10 @@
-const CACHE_NAME = 'tugasku-pwa-v13';
+const CACHE_NAME = 'tugasku-pwa-v15';
 const BASE_URL = self.registration.scope;
 const WIDGET_TAG = 'tugasku-summary';
 const WIDGET_TEMPLATE_URL = new URL('widgets/tugasku-widget-template.json', BASE_URL).href;
 const WIDGET_DATA_URL = new URL('widgets/tugasku-widget-data.json', BASE_URL).href;
 const WIDGET_RUNTIME_DATA_URL = new URL('widgets/tugasku-widget-data.runtime.json', BASE_URL).href;
+const SHARED_TARGET_DATA_URL = new URL('shared-target-data.json', BASE_URL).href;
 
 const APP_SHELL = [
   '',
@@ -15,6 +16,8 @@ const APP_SHELL = [
   'statistik.html',
   'pengaturan.html',
   'offline.html',
+  'manifest.json',
+  'shared-target-data.json',
   'assets/app.css',
   'assets/app.js',
   'assets/style.css',
@@ -22,6 +25,12 @@ const APP_SHELL = [
   'icons/icon-512x512-B.png',
   'icons/screenshot1.png',
   'icons/screenshot2.png',
+  'icons/screenshot3.png',
+  'icons/screenshot4.png',
+  'icons/screenshot5.png',
+  'icons/screenshot6.png',
+  'icons/screenshot7.png',
+  'icons/screenshot8.png',
   'widgets/tugasku-widget-template.json',
   'widgets/tugasku-widget-data.json',
   'widgets/widget-screenshot.png'
@@ -84,6 +93,33 @@ async function storeWidgetSummary(summary) {
   );
 }
 
+
+async function storeSharedTargetPayload(payload) {
+  const cache = await caches.open(CACHE_NAME);
+  await cache.put(
+    SHARED_TARGET_DATA_URL,
+    new Response(JSON.stringify(payload, null, 2), {
+      headers: { 'Content-Type': 'application/json; charset=utf-8' }
+    })
+  );
+}
+
+async function clearSharedTargetPayload() {
+  const cache = await caches.open(CACHE_NAME);
+  await cache.delete(SHARED_TARGET_DATA_URL);
+}
+
+async function handleShareTarget(request) {
+  const formData = await request.formData();
+  const payload = {
+    title: String(formData.get('title') || ''),
+    text: String(formData.get('text') || ''),
+    url: String(formData.get('url') || '')
+  };
+  await storeSharedTargetPayload(payload);
+  return Response.redirect(`${BASE_URL}tambah.html?share-target=1`, 303);
+}
+
 async function refreshAppShell() {
   const cache = await caches.open(CACHE_NAME);
   await Promise.all(APP_SHELL.map(async asset => {
@@ -130,8 +166,24 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const request = event.request;
   const url = new URL(request.url);
-  if (request.method !== 'GET') return;
   if (url.protocol.startsWith('chrome-extension')) return;
+
+  if (url.origin === self.location.origin && request.method === 'POST' && url.href === `${BASE_URL}tambah.html`) {
+    event.respondWith(handleShareTarget(request));
+    return;
+  }
+
+  if (url.origin === self.location.origin && request.method === 'GET' && url.href === SHARED_TARGET_DATA_URL) {
+    event.respondWith((async () => {
+      const cached = await caches.match(SHARED_TARGET_DATA_URL);
+      return cached || new Response('{}', {
+        headers: { 'Content-Type': 'application/json; charset=utf-8' }
+      });
+    })());
+    return;
+  }
+
+  if (request.method !== 'GET') return;
 
   if (url.origin === self.location.origin && url.pathname.endsWith('/manifest.json')) {
     event.respondWith((async () => {
@@ -244,6 +296,11 @@ self.addEventListener('widgetclick', event => {
 
 self.addEventListener('message', event => {
   const message = event.data || {};
+  if (message.type === 'CLEAR_SHARED_TARGET') {
+    const work = clearSharedTargetPayload();
+    if (typeof event.waitUntil === 'function') event.waitUntil(work);
+    return;
+  }
   if (message.type !== 'UPDATE_WIDGET_SUMMARY') return;
   const work = (async () => {
     await storeWidgetSummary(message.summary || {});

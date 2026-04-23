@@ -828,3 +828,45 @@ textarea { min-height: 114px; resize: vertical; }
     max-width: 170px;
   }
 }
+
+
+:root {
+  --titlebar-pad-y: max(0px, env(titlebar-area-height, 0px));
+}
+
+@media (display-mode: window-controls-overlay) {
+  .topbar-wrap {
+    padding-top: calc(var(--titlebar-pad-y) + 8px);
+  }
+
+  .topbar-left > div,
+  .brand-card {
+    -webkit-app-region: drag;
+  }
+
+  .menu-btn,
+  .topbar-actions,
+  .nav-link,
+  .mobile-link,
+  .btn,
+  .btn-secondary,
+  .btn-ghost,
+  .btn-danger,
+  .btn-success,
+  button,
+  input,
+  select,
+  textarea,
+  a {
+    -webkit-app-region: no-drag;
+  }
+}
+
+html.is-tabbed-app .page-kicker::after {
+  content: ' • Tabbed';
+  color: var(--secondary);
+}
+
+body.edge-side-panel .topbar-actions .chip {
+  font-size: .82rem;
+}

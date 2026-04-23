@@ -4,6 +4,7 @@ const LEGACY_TASKS_KEY = 'taskflow_tasks';
 const SETTINGS_KEY = 'tugasku_settings';
 const EDIT_KEY = 'tugasku_edit_id';
 const INCOMING_DRAFT_KEY = 'tugasku_incoming_draft';
+const SHARED_TARGET_DATA_URL = './shared-target-data.json';
 const defaultReminderOffsets = [10080, 4320, 1440, 120];
 let tasks = [];
 let settings = { default7: true, default3: true, default1: true, default2h: true, theme: 'light' };
@@ -833,6 +834,28 @@ function handleIncomingDraftParams() {
   return true;
 }
 
+async function consumeSharedTargetDraft() {
+  const params = new URLSearchParams(location.search);
+  if (params.get('share-target') !== '1') return false;
+  try {
+    const response = await fetch(SHARED_TARGET_DATA_URL, { cache: 'no-store' });
+    if (!response.ok) return false;
+    const payload = await response.json();
+    const draft = buildDraftFromIncomingPayload(payload);
+    if (!draft) return false;
+    applyDraftToForm(draft, 'share target');
+    history.replaceState({}, document.title, location.pathname);
+    if ('serviceWorker' in navigator) {
+      const registration = await navigator.serviceWorker.ready;
+      (registration.active || navigator.serviceWorker.controller)?.postMessage({ type: 'CLEAR_SHARED_TARGET' });
+    }
+    return true;
+  } catch (error) {
+    console.error('Gagal membaca data share target', error);
+    return false;
+  }
+}
+
 function buildDraftFromTextFile(text, filename='') {
   const lines = String(text || '').split(/\r?\n/).map(line => line.trim()).filter(Boolean);
   if (!lines.length) return null;
@@ -987,6 +1010,12 @@ function initFormPage() {
     const storedDraft = consumeIncomingDraft();
     if (storedDraft) applyDraftToForm(storedDraft, 'draft impor');
     handleIncomingDraftParams();
+    consumeSharedTargetDraft();
+    const params = new URLSearchParams(location.search);
+    if (params.get('source') === 'note' && !$('taskInput').value.trim()) {
+      setText('formStateText', 'Mode catatan cepat aktif. Isi judul singkat lalu simpan sebagai tugas atau catatan.');
+      if ($('channelInput')) $('channelInput').value = 'Catatan cepat';
+    }
   }
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -1259,6 +1288,24 @@ function initThemeListeners() {
   else if (media?.addListener) media.addListener(handleSchemeChange);
 }
 
+function setupDisplayModeExperience() {
+  const root = document.documentElement;
+  const refreshDisplayState = () => {
+    root.classList.toggle('is-tabbed-app', window.matchMedia('(display-mode: tabbed)').matches);
+    root.classList.toggle('is-wco-app', window.matchMedia('(display-mode: window-controls-overlay)').matches);
+  };
+  refreshDisplayState();
+  ['tabbed', 'window-controls-overlay'].forEach(mode => {
+    const media = window.matchMedia(`(display-mode: ${mode})`);
+    if (media?.addEventListener) media.addEventListener('change', refreshDisplayState);
+    else if (media?.addListener) media.addListener(refreshDisplayState);
+  });
+
+  const brands = navigator.userAgentData?.brands || [];
+  const isSidePanel = brands.some(item => item.brand === 'Edge Side Panel');
+  document.body?.classList.toggle('edge-side-panel', isSidePanel);
+}
+
 function initPage() {
   loadSettings();
   applyTheme();
@@ -1270,6 +1317,7 @@ function initPage() {
   setupInstallButtons();
   checkDueReminders();
   initThemeListeners();
+  setupDisplayModeExperience();
   handleLaunchFiles();
   setupBackgroundFeatures();
   if (page() === 'dashboard') renderDashboard();

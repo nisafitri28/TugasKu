@@ -5,34 +5,58 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "TugasKu",
+      "text": "${title}",
       "weight": "Bolder",
       "size": "Large",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "Buka aplikasi, tambah tugas baru, atau lihat kalender deadline.",
+      "text": "${subtitle}",
       "wrap": true,
       "isSubtle": true,
       "spacing": "Small"
+    },
+    {
+      "type": "FactSet",
+      "spacing": "Medium",
+      "facts": [
+        {
+          "title": "Aktif",
+          "value": "${active}"
+        },
+        {
+          "title": "7 Hari",
+          "value": "${dueSoon}"
+        },
+        {
+          "title": "Progress",
+          "value": "${progress}"
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "${todayLabel}",
+      "wrap": true,
+      "spacing": "Medium"
     }
   ],
   "actions": [
     {
-      "type": "Action.OpenUrl",
-      "title": "Buka TugasKu",
-      "url": "./index.html"
+      "type": "Action.Execute",
+      "title": "Dashboard",
+      "verb": "open-dashboard"
     },
     {
-      "type": "Action.OpenUrl",
-      "title": "Tambah Tugas",
-      "url": "./tambah.html"
+      "type": "Action.Execute",
+      "title": "Tambah",
+      "verb": "new-task"
     },
     {
-      "type": "Action.OpenUrl",
+      "type": "Action.Execute",
       "title": "Kalender",
-      "url": "./kalender.html"
+      "verb": "open-calendar"
     }
   ]
 }

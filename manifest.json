@@ -1,20 +1,28 @@
 {
-  "id": "./",
+  "id": "./index.html",
   "name": "TugasKu - Tugas Aman, Masa Depan Nyaman",
   "short_name": "TugasKu",
-  "description": "Aplikasi manajemen tugas mahasiswa",
+  "description": "Aplikasi PWA manajemen tugas mahasiswa untuk mencatat deadline, membuka file tugas, menerima share, dan tetap produktif secara offline.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "display_override": [
+    "window-controls-overlay",
+    "tabbed",
     "standalone",
     "minimal-ui",
     "browser"
   ],
   "background_color": "#F0F6FB",
-  "theme_color": "#005090",
+  "theme_color": "#2563EB",
   "orientation": "portrait",
   "lang": "id",
+  "dir": "ltr",
+  "categories": [
+    "productivity",
+    "education",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "icons/icon-192x192-A.png",
@@ -35,27 +43,63 @@
       "sizes": "1442x3090",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Tampilan onboarding atau contoh layar aplikasi mobile."
+      "label": "Beranda TugasKu pada tampilan mobile"
     },
     {
       "src": "icons/screenshot2.png",
       "sizes": "1442x3090",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Tampilan kedua aplikasi pada mode portrait."
+      "label": "Form tambah tugas pada tampilan mobile"
     },
     {
       "src": "icons/screenshot3.png",
       "sizes": "2860x1537",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Tampilan aplikasi di perangkat desktop"
+      "label": "Dashboard TugasKu pada desktop"
+    },
+    {
+      "src": "icons/screenshot4.png",
+      "sizes": "2864x1530",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Daftar tugas dan filter prioritas pada desktop"
+    },
+    {
+      "src": "icons/screenshot5.png",
+      "sizes": "2871x1536",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Kalender deadline kuliah pada desktop"
+    },
+    {
+      "src": "icons/screenshot6.png",
+      "sizes": "2870x1528",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Statistik progres tugas pada desktop"
+    },
+    {
+      "src": "icons/screenshot7.png",
+      "sizes": "2866x1528",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Halaman mata kuliah aktif pada desktop"
+    },
+    {
+      "src": "icons/screenshot8.png",
+      "sizes": "2877x1529",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Pengaturan tema dan reminder pada desktop"
     }
   ],
   "shortcuts": [
     {
       "name": "Tambah Tugas",
       "short_name": "Tambah",
+      "description": "Buat tugas baru dengan deadline dan prioritas.",
       "url": "./tambah.html",
       "icons": [
         {
@@ -69,7 +113,36 @@
     {
       "name": "Kalender Deadline",
       "short_name": "Kalender",
+      "description": "Lihat deadline kuliah paling dekat.",
       "url": "./kalender.html",
+      "icons": [
+        {
+          "src": "icons/icon-192x192-A.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        }
+      ]
+    },
+    {
+      "name": "Daftar Tugas",
+      "short_name": "Tugas",
+      "description": "Kelola, cari, dan arsipkan semua tugas.",
+      "url": "./tugas.html",
+      "icons": [
+        {
+          "src": "icons/icon-192x192-A.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        }
+      ]
+    },
+    {
+      "name": "Catatan Cepat",
+      "short_name": "Catat",
+      "description": "Buka form catatan atau tugas baru dengan cepat.",
+      "url": "./tambah.html?source=note",
       "icons": [
         {
           "src": "icons/icon-192x192-A.png",
@@ -80,15 +153,10 @@
       ]
     }
   ],
-  "categories": [
-    "productivity",
-    "education",
-    "utilities"
-  ],
-  "dir": "ltr",
   "share_target": {
     "action": "./tambah.html",
-    "method": "GET",
+    "method": "POST",
+    "enctype": "multipart/form-data",
     "params": {
       "title": "title",
       "text": "text",
@@ -101,13 +169,65 @@
       "url": "./tambah.html?protocol=%s"
     }
   ],
-  "related_applications": [
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "file_handlers": [
     {
-      "platform": "webapp",
-      "id": "./"
+      "action": "./tambah.html",
+      "accept": {
+        "application/json": [
+          ".json",
+          ".tugasku"
+        ],
+        "text/plain": [
+          ".txt",
+          ".md"
+        ]
+      }
     }
   ],
-  "iarc_rating_id": "",
-  "scope_extensions": [],
+  "widgets": [
+    {
+      "name": "Ringkasan TugasKu",
+      "short_name": "Ringkasan",
+      "description": "Widget ringkasan tugas aktif, deadline terdekat, dan aksi cepat.",
+      "tag": "tugasku-summary",
+      "template": "tugasku-summary-template",
+      "ms_ac_template": "widgets/tugasku-widget-template.json",
+      "data": "widgets/tugasku-widget-data.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "widgets/widget-screenshot.png",
+          "sizes": "600x400",
+          "type": "image/png",
+          "platform": "Windows",
+          "label": "Widget ringkasan TugasKu di Windows"
+        }
+      ],
+      "icons": [
+        {
+          "src": "icons/icon-192x192-A.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ],
+      "auth": false,
+      "update": 86400,
+      "multiple": true
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "tab_strip": {
+    "new_tab_button": {
+      "url": "./tambah.html"
+    }
+  },
+  "note_taking": {
+    "new_note_url": "./tambah.html?source=note"
+  },
   "prefer_related_applications": false
 }
